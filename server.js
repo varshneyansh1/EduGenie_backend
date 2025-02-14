@@ -1,11 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import testRoutes from "./routes/testRoutes.js";
-import { createServer } from "http";
-import { Server } from "socket.io";
 
 dotenv.config();
 connectDB();
@@ -18,13 +18,13 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
+
 app.use(express.json());
 app.use(cors());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/test", testRoutes);
-
+app.use("/api/tests", testRoutes);
 
 // Store active test sessions
 const activeTests = new Map();
@@ -70,6 +70,5 @@ io.on("connection", (socket) => {
   });
 });
 
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
