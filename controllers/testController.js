@@ -52,3 +52,20 @@ export const joinTest = async (req, res) => {
       res.status(500).json({ message: "Server Error", error });
     }
   };
+
+
+  export const getPublicTests = async (req, res) => {
+    try {
+      const publicTests = await Test.find({ isPublic: true })
+        .select("title creator createdAt") // Only return necessary fields
+        .populate("creator", "username"); // Populate creator's username
+  
+      res.status(200).json({
+        message: "Public tests fetched successfully",
+        tests: publicTests,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server Error", error });
+    }
+  };
